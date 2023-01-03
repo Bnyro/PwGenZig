@@ -14,7 +14,7 @@ pub fn build(b: *std.build.Builder) !void {
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
 
-    const exe = b.addExecutable("capy-template", "src/main.zig");
+    const exe = b.addExecutable("pw-generator", "src/main.zig");
     exe.setTarget(target);
     exe.setBuildMode(mode);
     try deps.imports.capy.install(exe, .{});
@@ -31,7 +31,7 @@ pub fn build(b: *std.build.Builder) !void {
 
     // Building for WebAssembly
     // WebAssembly doesn't have a concept of executables, so the way it works is that we make a shared library and capy exports a '_start' function automatically
-    const wasm = b.addSharedLibrary("capy-template", "src/main.zig", .unversioned);
+    const wasm = b.addSharedLibrary("pw-generator", "src/main.zig", .unversioned);
 
     @setEvalBranchQuota(5000);
     // Set the target to WebAssembly
