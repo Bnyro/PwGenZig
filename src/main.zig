@@ -77,6 +77,8 @@ fn generatePassword(_: *anyopaque) anyerror!void {
         return;
     }
     const password = try getPassword(length);
+    defer allocator.free(password);
+
     result.setText(password[0..length]);
 }
 
@@ -122,6 +124,7 @@ fn createCheckBox(userdata: usize, label: [:0]const u8) !capy.CheckBox_Impl {
 fn getPassword(l: u8) ![]u8 {
     // Array of all possible, selected chars
     const chars = try getChars();
+    defer allocator.free(chars);
 
     var password = std.ArrayList(u8).init(allocator);
     // defer password.deinit();
@@ -139,18 +142,15 @@ fn getPassword(l: u8) ![]u8 {
         try password.append(chars[i]);
     }
 
-    const pw = password.items;
-    return pw;
+    return password.items;
 }
 
 // Get the chars checked by the user
 fn getChars() ![]u8 {
     var chars = std.ArrayList(u8).init(allocator);
-    defer chars.deinit();
     if (includeNumbers) try chars.appendSlice(NUMBERS);
     if (includeLetters) try chars.appendSlice(LETTERS);
     if (includeCapitals) try chars.appendSlice(CAPITALS);
     if (includeSymbols) try chars.appendSlice(SYMBOLS);
-    const items = chars.items;
-    return items;
+    return chars.items;
 }
