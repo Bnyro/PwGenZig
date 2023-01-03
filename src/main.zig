@@ -146,9 +146,11 @@ fn getPassword(l: u8) ![]u8 {
 // Get the chars checked by the user
 fn getChars() ![]u8 {
     var chars = std.ArrayList(u8).init(allocator);
+    defer chars.deinit();
     if (includeNumbers) try chars.appendSlice(NUMBERS);
     if (includeLetters) try chars.appendSlice(LETTERS);
     if (includeCapitals) try chars.appendSlice(CAPITALS);
     if (includeSymbols) try chars.appendSlice(SYMBOLS);
-    return chars.items;
+    const items = chars.items;
+    return items;
 }
