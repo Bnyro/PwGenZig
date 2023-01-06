@@ -127,14 +127,8 @@ fn getPassword(l: u8) ![]u8 {
     defer allocator.free(chars);
 
     var password = std.ArrayList(u8).init(allocator);
-    // defer password.deinit();
 
-    var prng = std.rand.DefaultPrng.init(blk: {
-        var seed: u64 = undefined;
-        try std.os.getrandom(std.mem.asBytes(&seed));
-        break :blk seed;
-    });
-    const random = prng.random();
+    const random = std.crypto.random;
 
     var index: u8 = 0;
     while (index < l) : (index += 1) {
